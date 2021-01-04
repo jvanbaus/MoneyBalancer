@@ -1,0 +1,197 @@
+{% extends "accounting/home.html"%}
+
+{% block login %}
+
+
+<div class="container">
+    <section id="formHolder">
+
+        <div class="row">
+
+            <!-- Brand Box -->
+            <div class="col-sm-6 brand">
+                <a href="#" class="logo">MB <span>.</span></a>
+
+                <div class="heading">
+                    <h2>Money<sub style="
+                            vertical-align: sub; 
+                            font-size: large;">Balancer</sub></h2>
+                    <br>
+                    <p>Your Right Choice</p>
+                </div>
+
+
+                <!-- <div class="success-msg">
+                    <p>Great! You are one of our members now</p>
+                    <a href="#" class="profile">Your Profile</a>
+                    {{message}}
+                </div> -->
+
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+
+
+
+            <!-- Form Box -->
+            <div class="col-sm-6 form">
+
+                <!-- Login Form -->
+                <div class="login form-peice">
+                    <form class="login-form" action="#" method="post" autocomplete="on">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="loginemail">Email Adderss</label>
+                            <input type="email" name="loginemail" id="loginemail" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" name="loginPassword" id="loginPassword" required>
+                        </div>
+
+                        <div class="CTA">
+                            <input type="submit" name="login" value="login">
+                            <a href="#" class="switch">I'm New</a>
+                        </div>
+
+                        <div class="forgot-password">
+                            <!-- <a href="{% url 'forgot' %}" class="password">forgot password</a> -->
+                            <a href="#" class="password" data-target="#pwdModal" data-toggle="modal">forgot password</a>
+                        </div>
+                    </form>
+                </div><!-- End Login Form -->
+
+
+                <!-- Signup Form -->
+                <div class="signup form-peice switched">
+                    <form class="signup-form" action="#" method="post" autocomplete="on">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" name="fullname" id="name" class="name" required>
+                            <span class="error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Adderss</label>
+                            <input type="email" name="emailAddress" id="email" class="email" required>
+                            <span class="error"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="birthday">Birthday <small>use calender</small></label>
+                            <input type="text" name="bday" id="bday" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" id="password" class="pass" required>
+                            <span class="error"></span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="pb-5" for="securityQuestion">Security Question</label>
+
+                            <select name="securityQuestion" id="securityQuestion" required>
+                                <option value="1">Whats is your mother maiden name?</option>
+                                <option value="2">What is your favorite color?</option>
+                                <option value="3">What is your biggest fear?</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="securityAnswer">Security Answer</label>
+                            <input type="text" name="securityAnswer" id="securityAnswer" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="pb-5" for="accountType">Account Type</label>
+
+                            <select name="accountType" id="accountType">
+                                <option value="1">Accountant</option>
+                                <option value="2">Manager</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" name="address" id="address">
+                        </div>
+
+
+
+                        <div class="CTA pb-3">
+                            <input type="submit" name="signup" value="signup">
+                            <a href="#" class="switch">I have an account</a>
+                        </div>
+                    </form>
+                </div><!-- End Signup Form -->
+            </div>
+        </div>
+
+    </section>
+
+
+    <!--modal-->
+    <div id="pwdModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog forgot-container">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h2 class="text-center">Forgot Your Password?</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+
+
+                                <p>If you have forgotten your password you can reset it here.</p>
+                                <div class="signup form-peice">
+                                    <form class="forgot-password-form " action="#" method="post" autocomplete="on">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="email">Email Adderss</label>
+                                            <input type="email" name="emailAddress" id="email" class="email" required>
+                                            <span class="error"></span>
+                                        </div>
+
+                                        <div class="pb-3">
+                                            <input class="forgot-password-button" value="forgotpassword"
+                                                name="forgotpassword" type="submit">
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12 CTA">
+                        <a href="#" data-dismiss="modal">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+        //Add date after click
+        $('#bday').on('click', function () {
+            this.type = 'date';
+        });
+    </script>
+
+    {% endblock %}

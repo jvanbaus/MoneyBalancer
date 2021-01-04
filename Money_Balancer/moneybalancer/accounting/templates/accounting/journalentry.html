@@ -1,0 +1,269 @@
+{% extends "accounting/base.html"%}
+{% block content %}
+
+<!-- <script> 
+    $(document).ready(function () { 
+  
+      // Denotes total number of rows 
+      var x = 2; 
+  
+      // jQuery button click event to add a row 
+      $('#addDr').on('click', function () { 
+  
+        // Adding a row inside the tbody. 
+        $('#tbody').append(`
+        <tr id="R${++x}"> 
+                </tr>
+                <td class="row-index text-center"> 
+                    <p>Dr. Account ${x}</p></td> 
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select name="journalaccount{{x}}" id="journalaccount{{x}}">
+                            <option disabled selected value></option>
+                            {% for account in accounts %}
+                                {% if account.account_catagory == 1 or account.account_category == 5 %}
+                                    <option>{{account.account_number}}-{{account.account_name}}</option>
+                                {%endif%}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="form-group">
+                        <input type="number" step=0.01 name="journalaccountdebit{{x}}" id="journalaccountdebit{{x}}"
+                            class="name">
+                    </div>
+                </td>
+
+                <td>
+                    <div class="form-group">
+                        <input type="number" step=0.01 name="journalaccountcredit{{x}}" id="journalaccountcredit{{x}}"
+                            class="name">
+                    </div>
+                </td> 
+                <td class="text-center"> 
+                    <button class="btn btn-danger remove"type="button">Remove</button> 
+                </td> 
+                </tr>`); 
+      }); 
+
+      $('#addCr').on('click', function () { 
+  
+        // Adding a row inside the tbody. 
+        $('#tbody').append(`
+        <tr id="R${++x}"> 
+                <td class="row-index text-center"> 
+                    <p>Cr. Account ${x}</p></td> 
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select name="journalaccount{{x}}" id="journalaccount{{x}}">
+                            <option disabled selected value></option>
+                            {% for account in accounts %}
+                                {% if account.account_catagory == 2 or account.account_catagory == 3 or account.account_catagory == 4 %}
+                                    <option>{{account.account_number}}-{{account.account_name}}</option>
+                                {%endif%}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="form-group">
+                        <input type="number" step=0.01 name="journalaccountdebit{{x}}" id="journalaccountdebit{{x}}"
+                            class="name">
+                    </div>
+                </td>
+
+                <td>
+                    <div class="form-group">
+                        <input type="number" step=0.01 name="journalaccountcredit{{x}}" id="journalaccountcredit{{x}}"
+                            class="name">
+                    </div>
+                </td>
+
+
+
+              <td class="text-center"> 
+                <button class="btn btn-danger remove"
+                  type="button">Remove</button> 
+                </td> 
+
+            </tr>`); 
+      }); 
+  
+      // jQuery button click event to remove a row. 
+      $('#tbody').on('click', '.remove', function () { 
+  
+        // Getting all the rows next to the row 
+        // containing the clicked button 
+        var child = $(this).closest('tr').nextAll(); 
+  
+        // Iterating across all the rows  
+        // obtained to change the index 
+        child.each(function () { 
+  
+          // Getting <tr> id. 
+          var id = $(this).attr('id'); 
+  
+          // Getting the <p> inside the .row-index class. 
+          var idx = $(this).children('.row-index').children('p'); 
+  
+          // Gets the row number from <tr> id. 
+          var dig = parseInt(id.substring(1)); 
+  
+          // Modifying row index. 
+          idx.html(`Account ${dig - 1}`); 
+  
+          // Modifying row id. 
+          $(this).attr('id', `R${dig - 1}`); 
+        }); 
+  
+        // Removing the current row. 
+        $(this).closest('tr').remove(); 
+  
+        // Decreasing total number of rows by 1. 
+        x--; 
+      }); 
+    }); 
+  </script>  -->
+
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %} style="color: red;">{{ message }}</li>
+        {% endfor %}
+</ul>
+{% endif %}
+
+
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+
+    <p>Journal Date</p>
+    <input type="text" placeholder="{{date}}">
+
+    <p>Journal Entry Number</p>
+    <input type="text" placeholder="{{journal.id}}">
+
+    <p>Journal Type</p>
+    <div class="form-group">
+        <select name="journaltype">
+            <option value="R">Regular</option>
+            <option value="A">Adjusting</option>
+            <option value="V">Reversing</option>
+            <option value="C">Closing</option>
+        </select>
+    </div>
+
+    <!-- Add more debits and credits started -->
+
+    <div style="display: flex; flex-direction: row; justify-content: space-around">
+        <div class="debit_fields_wrap">
+            <button class="add_field_button" id="debit">Add Debit</button>
+            <select name="journalaccountnamesdebits0" id="journalaccountdebits0">
+                {% for account in accounts %}
+                <option value="{{ forloop.counter }}">{{account.account_number}}-{{account.account_name}}
+                </option>
+                {% endfor %}
+            </select>
+            <div class="form-group">
+                <input type="number" min="1" step=0.01 name="journalaccountdebit0" id="journalaccountdebit0"
+                    class="name" required>
+            </div>
+
+        </div>
+
+        <div class="credit_fields_wrap">
+            <button class="add_field_button" id="credit">Add Credit</button>
+            <select name="journalaccountnamescredits0" id="journalaccountnamescredits0">
+                {% for account in accounts %}
+                <option value="{{ forloop.counter }}">{{account.account_number}}-{{account.account_name}}
+                </option>
+                {% endfor %}
+            </select>
+            <div class="form-group">
+                <input type="number" min="1" step=0.01 name="journalaccountcredit0" id="journalaccountcredit0"
+                    class="name" required>
+            </div>
+
+        </div>
+    </div>
+
+    <input type="hidden" name="debitnumber" id="debitnumber" value="1" />
+    <input type="hidden" name="creditnumber" id="creditnumber" value="1" />
+
+    <div class="form-group">
+        <textarea name="journalaccountdes" id="journalaccountdes" placeholder="Journal Description" cols="52"
+            rows="8"></textarea>
+    </div>
+
+
+    <div class="form-group">
+        <input type="file" class="form-control-file" name="journalupload" id="journalaccount">
+    </div>
+
+    <div class="pt-4 pb-4">
+        <input class="forgot-password-button" value="Journal Entry" name="editaccount" type="submit">
+        <a href="{% url 'journal' %}" class="forgot-password-button">Cancel Entry</a>
+    </div>
+
+</form>
+
+
+<script>
+    $(document).ready(function () {
+        var max_fields = 10; //maximum input boxes allowed
+
+        var add_button = $(".add_field_button"); //Add button ID
+
+        var debit_wrapper = $(".debit_fields_wrap");
+        var credit_wrapper = $(".credit_fields_wrap");
+
+
+        var x = 1;
+        var y = 1;
+        // var debit_number = $("#debitnumber").val(x);
+        // var credit_number = $("#creditnumber").val(y);
+        var value = $("#journalaccount option:selected").val();
+        console.log(value)
+
+        $(add_button).click(function (e) { //on add input button click
+            e.preventDefault();
+            var idClicked = e.target.id
+            if (x < max_fields || y < max_fields) {
+                console.log(x)
+                if (idClicked === "debit") {
+                    $(debit_wrapper).append('<div><select name="journalaccountdebits' + x + '" id="journalaccountdebits' + x + '">{% for account in accounts %}<option value="{{ forloop.counter }}">{{ account.account_number }}-{{ account.account_name }}</option>{% endfor %}</select ><div class="form-group"><input type = "number" step = 0.01 name = "journalaccountdebit' + x + '"id = "journalaccountdebit' + x + '" class= "name" required></div ><a href="#" class="remove_field">Remove</a></div>'); //add input box
+                    x++;
+                    $("#debitnumber").val(x);
+                }
+                else {
+                    $(credit_wrapper).append('<div><select name="journalaccountcredits' + y + '" id="journalaccountcredits' + y + '">{% for account in accounts %}<option value="{{ forloop.counter }}">{{ account.account_number }}-{{ account.account_name }}</option>{% endfor %}</select ><div class="form-group"><input type = "number" step = 0.01 name = "journalaccountcredit' + y + '"id = "journalaccountcredit' + y + '" class= "name" required></div ><a href="#" class="remove_field">Remove</a></div>'); //add input box
+                    y++;
+                    console.log(y)
+                    $("#creditnumber").val(y);
+                }
+            }
+        });
+
+        $(debit_wrapper).on("click", ".remove_field", function (e) { //user click on remove text
+            e.preventDefault(); $(this).parent('div').remove(); x--;
+        })
+
+        $(credit_wrapper).on("click", ".remove_field", function (e) { //user click on remove text
+            e.preventDefault(); $(this).parent('div').remove(); y--;
+        })
+
+        $("#journalaccount").change(function () {
+            var value = $("#journalaccount option:selected").val();
+            $("#journalaccount option:selected").attr('disabled', 'disabled');
+        });
+    });
+</script>
+
+{% endblock content %}

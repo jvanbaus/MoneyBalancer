@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+        </script>
+
+    <!-- fontawesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Raleway:300,600" rel="stylesheet">
+
+    <!-- main style -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    <!-- register style -->
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+
+    <!-- navbar style -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+
+    <!-- table style -->
+    <link rel="stylesheet" href="{% static 'css/table.css' %}">
+
+    <!-- calendar style -->
+    <link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+
+    <!-- modal style -->
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+
+    {% if title %}
+    <title>Money Balancer - {{title}}</title>
+    {% else %}
+    <title>Money Balancer</title>
+    {% endif%}
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark sticky-top">
+        <a class="navbar-brand logo" href="{% url 'login' %}">MB <span>.</span></a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navb"
+            aria-expanded="true">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navb" class="navbar-collapse collapse hide">
+            <ul class="navbar-nav">
+
+                {% if user.approved or user.is_staff%}
+                <!-- <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'account' %}">Accounting</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'journal' %}">Journaling</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Reports
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">Event Log</a>
+                        <a class="dropdown-item" href="#">Journal Reports</a>
+                        <a class="dropdown-item" href="#">Income Statement</a>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'event' %}">Event Logs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'faq' %}">Faqs</a>
+                </li> -->
+
+
+                <li {% if request.resolver_match.url_name == 'account' %}class="active"{% endif %}>
+                    <a title="Takes you to chart of accounts" class="nav-link" href="{% url 'account' %}">Accounting</a>
+                </li>
+                <li {% if request.resolver_match.url_name == 'journal' %}class="active"{% endif %}>
+                    <a title="Takes you to page to see journal entries" class="nav-link" href="{% url 'journal' %}">Journaling</a>
+                </li>
+                <li {% if request.resolver_match.url_name == 'event' %}class="active"{% endif %}>
+                    <a title="Takes you to event logs of accounts" class="nav-link" href="{% url 'event' %}">Event Logs</a>
+                </li>
+                <li {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>
+                    <a class="nav-link" href="#">Reports</a>
+                </li>
+                <li {% if request.resolver_match.url_name == 'faq' %}class="active"{% endif %}>
+                    <a title="Frequently Asked Questions" class="nav-link" href="{% url 'faq' %}">Faqs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-target="#calanderModal" data-toggle="modal">Calander</a>
+                </li>
+
+
+
+                {% else %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'login' %}">Accounting</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Journaling</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'faq' %}">Faqs</a>
+                </li>
+                {% endif %}
+            </ul>
+
+            <ul class="nav navbar-nav ml-auto">
+
+                {% if user.approved or user.is_staff%}
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><span class="fas fa-user"></span> {{user.username}}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+
+    {% block content %}{% endblock %}
+
+    <!-- register js -->
+    <script src="{% static 'js/register.js'%}"></script>
+
+
+    <!-- calendar js -->
+    <script src="{% static 'js/calendar.js'%}"></script>
+
+    <!-- table js -->
+    <script src="{% static 'js/tables.js'%}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+        </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+{% extends "accounting/base.html"%}
+{% block content %}
+
+<style>
+    a {
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #ffffff;
+        text-decoration: none;
+    }
+</style>
+
+<div class=" container text-center align-items-center">
+    <h1>Ledger Page Is Here</h1>
+
+    <p>Ledger: {{accountLedger.account_number}}</p>
+    {% for j, d, c, b in items %}
+    <p><a href="{% url 'journalnumber' j.id %}">{{j.id}}</a></p>
+    <br>
+    {{j.journal_creation_date}}
+    <br>
+    <p>{{j.journal_description}}</p>
+
+    <p>Debit: {{d}}</p>
+    <p>Crebit: {{c}}</p>
+
+    <p>Balance: {{b}}</p>
+    {%endfor%}
+
+    <a href="{% url 'account' %}" class="forgot-password-button">Back to Accounts</a>
+</div>
+
+
+{% endblock content %}

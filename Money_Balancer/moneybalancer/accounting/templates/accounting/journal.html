@@ -1,0 +1,321 @@
+{% extends "accounting/base.html"%}
+{% block content %}
+
+{% load humanize %}
+<style>
+    .text-to-see {
+        color: #000000;
+    }
+
+
+    .ledger-click {
+        color: #000000;
+        /* text-decoration: none; */
+    }
+
+    .ledger-click:hover {
+        color: #f95959;
+        /* text-decoration: none; */
+    }
+
+    .crud-click {
+        color: #000000;
+    }
+
+    .crud-click:hover {
+        color: #f95959;
+    }
+</style>
+
+
+<div class="container-fluid">
+
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %} style="color: red;">{{ message }}</li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+
+
+    <div class="d-flex row justify-content-center">
+        <!-- calendar display might not connect it to button change colors-->
+        <!-- calendar css or js -->
+        <div class="mt-3 d-flex">
+            <div class="calendar calendar-first" id="calendar_first">
+                <div class="calendar_header">
+                    <button class="switch-month switch-left"> <i class="fa fa-chevron-left"></i></button>
+                    <h2></h2>
+                    <button class="switch-month switch-right"> <i class="fa fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar_weekdays"></div>
+                <div class="calendar_content"></div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+    <!-- Accordion -->
+    <div id="accordionExample" class="accordion shadow">
+
+        <!-- Accordion item 1 -->
+        <div class="card">
+            <div id="headingOne" class="card-header bg-white shadow-sm border-0 text-center">
+                <h6 class="mb-0 font-weight-bold">
+                    <a href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                        aria-controls="collapseOne"
+                        class="d-block position-relative text-dark text-uppercase collapsible-link py-2">Filters</a>
+                </h6>
+            </div>
+            <div id="collapseOne" aria-labelledby="headingOne" data-parent="#accordionExample" class="collapse show">
+                <form method="get">
+
+                    {{myFilter.form}}
+
+                    <button title="Click to confirm filters" class="btn btn-primary" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="d-flex column justify-content-between">
+
+
+
+        <div class="">
+            <!-- Form to add button -->
+            <a href="{% url 'journalentry' %} " class="crud-click" type="submit" name="edit">Journal Entry</a>
+        </div>
+
+        <!-- Search list -->
+        <div class="d-inline-flex">
+            <input type="text" class="search form-control" placeholder="Search or Filter accounts">
+        </div>
+    </div>
+
+
+
+    <span class="counter pull-right"></span>
+    <table class="table table-hover table-bordered results">
+        <thead class="bg-dark text-white">
+            <tr>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Account</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th>Creator</th>
+
+
+                {% if user.usertype == 2 %}
+                <th></th>
+                {% endif %}
+            </tr>
+            <tr class="warning no-result">
+                <td colspan="12"><i class="fa fa-warning"></i> No result</td>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for journal, user_name in items%}
+
+            <tr>
+
+                <td>
+                    {{journal.journal_creation_date}}
+                </td>
+
+                <td>
+                    {%if journal.journal_status == 'A' %}
+                    Active
+                    {% elif journal.journal_status == 'R' %}
+                    Rejected
+                    {% else %}
+                    Pending
+                    {% endif %}
+                </td>
+
+                <td>
+
+                    <p>{{journal.journal_account_numbers.0}} <span>-</span> {{journal.journal_account_names.0}}</p>
+
+                    <p>{{journal.journal_account_numbers.1}} <span>-</span> {{journal.journal_account_names.1}}</p>
+
+                    {% if journal.journal_account_numbers.2 is not None %}
+                    <p>{{journal.journal_account_numbers.2}} <span>-</span> {{journal.journal_account_names.2}}</p>
+                    {% endif %}
+                    {% if journal.journal_account_numbers.3 is not None %}
+                    <p>{{journal.journal_account_numbers.3}} <span>-</span> {{journal.journal_account_names.3}}</p>
+                    {% endif %}
+                    {% if journal.journal_account_numbers.4 is not None %}
+                    <p>{{journal.journal_account_numbers.4}} <span>-</span> {{journal.journal_account_names.4}}</p>
+                    {% endif %}
+                    {% if journal.journal_account_numbers.5 is not None %}
+                    <p>{{journal.journal_account_numbers.5}} <span>-</span> {{journal.journal_account_names.5}}</p>
+                    {% endif %}
+                    {% if journal.journal_account_numbers.6 is not None %}
+                    <p>{{journal.journal_account_numbers.6}} <span>-</span> {{journal.journal_account_names.6}}</p>
+                    {% endif %}
+                    {% if journal.journal_account_numbers.7 is not None %}
+                    <p>{{journal.journal_account_numbers.7}} <span>-</span> {{journal.journal_account_names.7}}</p>
+                    {% endif %}
+
+                    {{journal.journal_description}}
+                    <br>
+
+                </td>
+
+                <td style="text-align:right;">
+                    $ {{journal.journal_account_debits.0|intcomma}}
+                    <br>
+                    {% if journal.journal_account_debits.1 != 0%}
+                    <p>{{journal.journal_account_debits.1|intcomma}}</p>
+
+                    {% endif %}
+                    {% if journal.journal_account_debits.2 != 0%}
+                    <p>{{journal.journal_account_debits.2|intcomma}}</p>
+
+                    {% endif %}
+
+                    {% if journal.journal_account_debits.3 != 0%}
+                    <p>{{journal.journal_account_debits.3|intcomma}}</p>
+
+                    {% endif %}
+                    {% if journal.journal_account_debits.4 != 0%}
+                    <p>{{journal.journal_account_debits.4|intcomma}}</p>
+
+                    {% endif %}
+                    {% if journal.journal_account_debits.5 != 0%}
+                    <p>{{journal.journal_account_debits.5|intcomma}}</p>
+
+                    {% endif %}
+                    {% if journal.journal_account_debits.6 != 0%}
+                    <p>{{journal.journal_account_debits.6|intcomma}}</p>
+
+                    {% endif %}
+                    {% if journal.journal_account_debits.7 != 0%}
+                    <p>{{journal.journal_account_debits.7|intcomma}}</p>
+
+                    {% endif %}
+                </td>
+
+                <td style="text-align:right;">
+                    <br>
+
+                    {% if journal.journal_account_credits.0 != 0%}
+
+                    <p>{{journal.journal_account_credits.0|intcomma}}</p>
+
+                    {% endif %}
+
+                    {% if journal.journal_account_credits.1 != 0%}
+                    <p class="mt-3">$ {{journal.journal_account_credits.1|intcomma}}</p>
+
+                    {% endif %}
+                    {% if journal.journal_account_credits.2 != 0%}
+
+                    <p>{{journal.journal_account_credits.2|intcomma}}</p>
+
+                    {% endif %}
+
+                    {% if journal.journal_account_credits.3 != 0%}
+                    <p>{{journal.journal_account_credits.3|intcomma}}</p>
+
+                    {% endif %}
+
+                    {% if journal.journal_account_credits.4 != 0%}
+                    <p>{{journal.journal_account_credits.4|intcomma}}</p>
+
+                    {% endif %}
+
+                    {% if journal.journal_account_credits.5 != 0%}
+                    <p>{{journal.journal_account_credits.5|intcomma}}</p>
+
+                    {% endif %}
+                    {% if journal.journal_account_credits.6 != 0%}
+                    <p>{{journal.journal_account_credits.6|intcomma}}</p>
+
+                    {% endif %}
+
+                    {% if journal.journal_account_credits.7 != 0%}
+                    <p>{{journal.journal_account_credits.7|intcomma}}</p>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{user_name}}
+                </td>
+
+                {% if user.usertype == 2%}
+                {% if journal.journal_status == 'P' %}
+                <td>
+                    <a href="#" class="crud-click rejected-modal" data-id="{{journal.id}}" data-toggle="modal"
+                        data-target="#rejected" name="reject">Reject</a>
+
+                    <a href="{% url 'approve' journal.id %}" class="crud-click" type="submit" name="approve">Approve</a>
+                </td>
+                {% endif %}
+                {%endif%}
+
+            </tr>
+
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+
+
+</div>
+
+<div class="modal fade" id="rejected" tabindex="-1" role="dialog" aria-labelledby="Reject Reason" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Rejection and Reason</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="reject/" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea name="journalaccountcom" id="journalaccountcom" placeholder="Journal Comment Reason"
+                            cols="42" rows="8" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pt-4 pb-4">
+                        <input class="forgot-password-button" value="Journal Rejection" name="journalrejection"
+                            type="submit">
+                        <a href="{% url 'journal' %}" class="forgot-password-button">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).on("click", ".rejected-modal", function () {
+        var journalId = $(this).data('id');
+        console.log(journalId)
+        $('form').attr('action', "reject/" + journalId);
+    });
+</script>
+
+
+
+{% endblock content %}

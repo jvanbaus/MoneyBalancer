@@ -1,0 +1,18 @@
+.navbar a.logo {
+    color: #f95959;
+    font-size: 30px;
+    font-weight: 700;
+    text-decoration: none;
+    line-height: 1em;
+}
+
+.navbar a.logo span {
+    font-size: 30px;
+    color: #fff;
+    transform: translateX(-5px);
+    display: inline-block;
+}
+
+.navbar a {
+    text-decoration: none;
+}

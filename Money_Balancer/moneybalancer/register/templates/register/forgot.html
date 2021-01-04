@@ -1,0 +1,19 @@
+{% extends "accounting/base.html"%}
+
+
+{% block content %}
+
+<h1>Forgot Page</h1>
+
+{% if user.securityquestion == 1 %}
+<p>Whats is your mother maiden name?</p>
+{% endif %}
+{% if user.securityquestion == 2 %}
+<p>What is your favorite color?</p>
+{% endif %}
+{% if user.securityquestion == 3 %}
+<p>What is your biggest fear?</p>
+{% endif %}
+
+
+{% endblock %}

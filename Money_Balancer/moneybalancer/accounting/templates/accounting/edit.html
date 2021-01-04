@@ -1,0 +1,247 @@
+{% extends "accounting/base.html"%}
+{% block content %}
+
+{% load humanize %}
+
+<style>
+    .align-it {
+        display: flex;
+        justify-content: center;
+    }
+
+    .edit-container {
+        padding: 15px;
+        font-family: 'Montserrat', sans-serif;
+        background: #ffffff;
+        max-width: 500px;
+        height: 100%;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #ffffff;
+        text-decoration: none;
+    }
+</style>
+
+
+<div class="align-it">
+    <div class="edit-container">
+
+        <p>Edit Account.</p>
+        <div class="signup form-peice">
+            <form class="forgot-password-form " action="#" method="post" autocomplete="on">
+                {% csrf_token %}
+
+                <!-- <div class="form-group">
+                                                    <label for="accountnumber">Account Number</label>
+                                                    <input type="number" min="10000000" max="999999999999" name="accountnumber"
+                                                        id="accountnumber" class="name" required>
+                                                    <span class="error"></span>
+                                                </div> -->
+
+                <div class="form-group">
+                    <label for="name">Account Name: {{accountEdit.account_name}}</label>
+                    <input type="text" name="accountname" id="accountname" class="name">
+                    <span class="error"></span>
+                </div>
+
+                <div class="form-group pt-5">
+                    <!-- <label for="accountdes">Account description</label> -->
+                    <textarea name="accountdes" id="accountdes" placeholder="Account Description" cols="42"
+                        rows="8">{{accountEdit.account_description}}</textarea>
+                    <span class="error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="pb-5" for="accountcatagory">Catagory</label>
+
+                    <select name="accountcatagory" id="accountcatagory">
+
+                        <option {% ifequal accountEdit.account_catagory 1 %} selected {% endifequal %} value="1">Assest
+                        </option>
+                        <option {% ifequal accountEdit.account_catagory 2 %} selected {% endifequal %} value="2">
+                            Liability
+                        </option>
+                        <option {% ifequal accountEdit.account_catagory 3 %} selected {% endifequal %} value="3">Equity
+                        </option>
+                        <option {% ifequal accountEdit.account_catagory 4 %} selected {% endifequal %} value="4">Revenue
+                        </option>
+                        <option {% ifequal accountEdit.account_catagory 5 %} selected {% endifequal %} value="5">Expense
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="pb-5" for="accountsubcatagory">SubCatagory</label>
+
+                    <select name="accountsubcatagory" id="accountsubcatagory">
+                        <option disabled>---Assests---</option>
+                        <option {% ifequal accountEdit.account_subcatagory 1 %} selected {% endifequal %} value="1">
+                            Checking
+                        </option>
+                        <option {% ifequal accountEdit.account_subcatagory 2 %} selected {% endifequal %} value="2">
+                            Petty
+                            cash
+                        </option>
+                        <option {% ifequal accountEdit.account_subcatagory 3 %} selected {% endifequal %} value="3">
+                            Inventory
+                        </option>
+                        <option {% ifequal accountEdit.account_subcatagory 4 %} selected {% endifequal %} value="4">
+                            Accounts
+                            receivable</option>
+                        <option disabled>---Liabilities---</option>
+                        <option {% ifequal accountEdit.account_subcatagory 5 %} selected {% endifequal %} value="5">
+                            Payroll
+                            tax
+                            liabilities</option>
+                        <option {% ifequal accountEdit.account_subcatagory 6 %} selected {% endifequal %} value="6">
+                            Sales
+                            tax
+                            collected</option>
+                        <option {% ifequal accountEdit.account_subcatagory 7 %} selected {% endifequal %} value="7">
+                            Credit
+                            memo
+                            liability</option>
+                        <option {% ifequal accountEdit.account_subcatagory 8 %} selected {% endifequal %} value="8">
+                            Accounts
+                            payable</option>
+                        <option disabled>---Equity---</option>
+                        <option {% ifequal accountEdit.account_subcatagory 9 %} selected {% endifequal %} value="9">
+                            Owner’s
+                            equity</option>
+                        <option {% ifequal accountEdit.account_subcatagory 10 %} selected {% endifequal %} value="10">
+                            Common
+                            stock</option>
+                        <option {% ifequal accountEdit.account_subcatagory 11 %} selected {% endifequal %} value="11">
+                            Retained
+                            earnings</option>
+                        <option disabled>---Revenue---</option>
+                        <option {% ifequal accountEdit.account_subcatagory 12 %} selected {% endifequal %} value="12">
+                            Product
+                            sales</option>
+                        <option {% ifequal accountEdit.account_subcatagory 13 %} selected {% endifequal %} value="13">
+                            Earned
+                            interest</option>
+                        <option {% ifequal accountEdit.account_subcatagory 14 %} selected {% endifequal %} value="14">
+                            Miscellaneous income</option>
+                        <option disabled>---Expenses---</option>
+                        <option {% ifequal accountEdit.account_subcatagory 15 %} selected {% endifequal %} value="15">
+                            Payroll
+                        </option>
+                        <option {% ifequal accountEdit.account_subcatagory 16 %} selected {% endifequal %} value="16">
+                            Insurance
+                        </option>
+                        <option {% ifequal accountEdit.account_subcatagory 17 %} selected {% endifequal %} value="17">
+                            Rent
+                        </option>
+                        <option {% ifequal accountEdit.account_subcatagory 18 %} selected {% endifequal %} value="18">
+                            Equipment
+                        </option>
+                        <option {% ifequal accountEdit.account_subcatagory 19 %} selected {% endifequal %} value="19">
+                            Cost
+                            of
+                            goods sold(COGS)</option>
+
+                    </select>
+                </div>
+
+                <!-- <div class="form-group">
+                                                    <label class="pb-5" for="normalside">Normal Side</label>
+        
+                                                    <select name="normalside" id="normalside" required>
+                                                        <option value=L>Left</option>
+                                                        <option value=R>Right</option>
+                                                    </select>
+                                                </div> -->
+
+                <!-- <div class="form-group">
+                                            <label for="accountinital">Intial Balance</label>
+                                            <input type="number" step=0.01 name="accountinital" id="accountinital"
+                                                class="name" required>
+                                            <span class="error"></span>
+                                        </div> -->
+
+                <div class="form-group">
+                    <label for="accountbalance"> Account Balance: ${{accountEdit.account_balance|intcomma}}</label>
+                    <input type="number" step=0.01 name="accountbalance" id="accountbalance" class="name">
+                    <span class="error"></span>
+                </div>
+
+                <!-- <div class="form-group">
+                                        <label for="accountdebit">Debit</label>
+                                        <input type="number" step=0.01 name="accountdebit" id="accountdebit"
+                                            class="name" required>
+                                        <span class="error"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="accountcredit">Credit</label>
+                                        <input type="number" step=0.01 name="accountcredit" id="accountcredit"
+                                            class="name" required>{{account.account_credit}}</input>
+                                        <span class="error"></span>
+                                    </div> -->
+
+                <div class="form-group">
+                    <label class="pb-5" for="accountstatement">Statement</label>
+
+                    <select name="accountstatement" id="accountstatement">
+                        <option {% ifequal accountEdit.account_statement 1 %} selected {% endifequal %} value="1">Income
+                            Sheet
+                        </option>
+                        <option {% ifequal accountEdit.account_statement 2 %} selected {% endifequal %} value="2">
+                            Balance
+                            Sheet
+                        </option>
+                        <option {% ifequal accountEdit.account_statement 3 %} selected {% endifequal %} value="3">
+                            Retained
+                            Earnings</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="pb-5" for="accountstatus">Status</label>
+
+                    <select name="accountstatus" id="accountstatus">
+                        <option {% ifequal accountEdit.account_status|stringformat:"s" "A" %} selected {% endifequal %}
+                            value=A>
+                            Active
+                        </option>
+                        <option {% ifequal accountEdit.account_status|stringformat:"s" "D"  %} selected {% endifequal %}
+                            value=D>
+                            Deactive
+                        </option>
+                        <option {% ifequal accountEdit.account_status|stringformat:"s" "P" %} selected {% endifequal %}
+                            value=P>
+                            Pending
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group pt-5">
+                    <!-- <label for="accountdes">Account description</label> -->
+                    <textarea name="accountcom" id="accountcom" placeholder="Account Comments" cols="42"
+                        rows="8">{{accountEdit.account_comment}}</textarea>
+                    <span class="error"></span>
+                </div>
+                <div class="pt-4 pb-4">
+                    <input class="forgot-password-button" value="Edit Account" name="editaccount" type="submit">
+                    <a href="{% url 'account' %}" class="forgot-password-button">Cancel Edit</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+</div>
+</div>
+
+
+</div>
+</div>
+
+{% endblock content %}

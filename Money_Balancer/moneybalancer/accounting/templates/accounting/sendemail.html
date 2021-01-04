@@ -1,0 +1,68 @@
+{% extends "accounting/base.html"%}
+{% block content %}
+
+
+<style>
+    .align-it {
+        display: flex;
+        justify-content: center;
+    }
+
+    .edit-container {
+        padding: 15px;
+        font-family: 'Montserrat', sans-serif;
+        background: #ffffff;
+        max-width: 500px;
+        height: 100%;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #ffffff;
+        text-decoration: none;
+    }
+</style>
+
+
+<div class="align-it">
+    <div class="edit-container">
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+        </ul>
+        {% endif %}
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <select name="email" id="emailSender">
+                    {% for user in users %}
+                    <option value="{{user.email}}">
+                        {{user.email}}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" placeholder="Subject" name="subject" id="subject" rows="1"></textarea>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" placeholder="Message" name="message" id="message" rows="3"></textarea>
+            </div>
+
+
+            <div class="pt-4">
+                <input class="forgot-password-button" value="Send Email" name="sendemail" type="submit">
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock content %}

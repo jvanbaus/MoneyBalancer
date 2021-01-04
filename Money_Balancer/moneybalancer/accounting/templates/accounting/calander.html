@@ -1,0 +1,27 @@
+<!-- Where to add form information can change layout  -->
+<!-- form that is posting to database must have {% csrf_token %}  -->
+<!--modal-->
+<div id="calanderModal" class="modal fade" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close text-left" data-dismiss="modal" aria-hidden="true">×</button>
+                <h2 class="text-center">Calander</h2>
+            </div>
+            <div class="modal-body">
+            
+                <div class="mt-3 d-flex">
+                    <div class="calendar calendar-first" id="calendar_first">
+                        <div class="calendar_header">
+                            <button class="switch-month switch-left"> <i class="fa fa-chevron-left"></i></button>
+                            <h2></h2>
+                            <button class="switch-month switch-right"> <i class="fa fa-chevron-right"></i></button>
+                         </div>
+                     <div class="calendar_weekdays"></div>
+                    <div class="calendar_content"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

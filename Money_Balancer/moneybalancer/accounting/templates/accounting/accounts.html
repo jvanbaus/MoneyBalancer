@@ -1,0 +1,247 @@
+{% extends "accounting/base.html"%}
+{% block content %}
+{% load humanize %}
+<style>
+    .text-to-see {
+        color: #000000;
+    }
+
+
+    .ledger-click {
+        color: #000000;
+        /* text-decoration: none; */
+    }
+
+    .ledger-click:hover {
+        color: #f95959;
+        /* text-decoration: none; */
+    }
+
+    .crud-click {
+        color: #000000;
+    }
+
+    .crud-click:hover {
+        color: #f95959;
+    }
+</style>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}" {% endif %} style="color: red;">{{ message }}</li>
+        {% endfor %}
+</ul>
+{% endif %}
+
+<div class="container-fluid">
+
+
+    <div class="d-flex row justify-content-center">
+        <!-- calendar display might not connect it to button change colors-->
+        <!-- calendar css or js -->
+        <div class="mt-3 d-flex">
+            <div class="calendar calendar-first" id="calendar_first">
+                <div class="calendar_header">
+                    <button class="switch-month switch-left"> <i class="fa fa-chevron-left"></i></button>
+                    <h2></h2>
+                    <button class="switch-month switch-right"> <i class="fa fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar_weekdays"></div>
+                <div class="calendar_content"></div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+    <div class="d-flex column justify-content-between">
+
+        {% if user.is_staff %}
+        <div class="">
+            <!-- Form to add button -->
+            <h2><a href="#" class="text-to-see" data-target="#accountsModal" data-toggle="modal">add account</a></h2>
+            <h2><a href="{% url 'sendemail' %}">send email</a></h2>
+        </div>
+        {% endif %}
+
+        <!-- Search list -->
+        <div class="d-inline-flex">
+            <input type="text" class="search form-control" placeholder="Search or Filter accounts">
+        </div>
+    </div>
+
+
+
+                <!-- Accordion -->
+            <div id="accordionExample" class="accordion shadow">
+
+                <!-- Accordion item 1 -->
+                <div class="card">
+                    <div id="headingOne" class="card-header bg-white shadow-sm border-0 text-center">
+                        <h6 class="mb-0 font-weight-bold">
+                            <a href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                                aria-controls="collapseOne"
+                                class="d-block position-relative text-dark text-uppercase collapsible-link py-2">Filters</a>
+                        </h6>
+                    </div>
+                    <div id="collapseOne" aria-labelledby="headingOne" data-parent="#accordionExample"
+                        class="collapse show">
+                            <form method="get">
+
+                            {{myFilter.form}}
+
+                            <button title="Click to confirm filters" class="btn btn-primary" type="submit">Search</button>
+                            </form>
+                    </div>
+                </div>
+
+            </div>
+
+    <!-- Table to be edited with correct data and look better -->
+    <!-- Table has to have a add delete edit section see example below-->
+    <!-- {% if user.admin %}
+    <li class="nav-item">
+        <a class="nav-link" href="#"><span class="fas fa-user"></span> {{user.username}}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> Logout</a>
+    </li>
+    {% else %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> Login</a>
+    </li>
+    {% endif %} -->
+
+
+
+    <span class="counter pull-right"></span>
+    <table class="table table-hover table-bordered results">
+        <thead class="bg-dark text-white">
+            <tr>
+                <th>Account Number</th>
+                <th>Account Name</th>
+                <th>Catagory</th>
+                <th>Subcatagory</th>
+                <th>Side</th>
+                <th>Initial Balance</th>
+                <th>Balance</th>
+                <!-- <th>Statement</th> -->
+
+                {% if user.is_staff %}
+                <th></th>
+                {% endif %}
+            </tr>
+            <tr class="warning no-result">
+                <td colspan="12"><i class="fa fa-warning"></i> No result</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for account in accounts %}
+            <tr>
+                <td><a title="Takes you ledger of this account" href="{% url 'ledger' account.id  %}" class="ledger-click">{{ account.account_number }}</a></td>
+                <td><a title="Takes you ledger of this account" href="{% url 'ledger' account.id  %}" class="ledger-click">{{ account.account_name }}</a></td>
+
+                <!-- Display Catagory -->
+                {% if account.account_catagory == 1 %}
+                <td>Assests</td>
+                {% elif account.account_catagory == 2 %}
+                <td>Liability</td>
+                {% elif account.account_catagory == 3 %}
+                <td>Equity</td>
+                {% elif account.account_catagory == 4 %}
+                <td>Revenue</td>
+                {% else %}
+                <td>Expense</td>
+                {% endif %}
+
+                <!-- Display Subcatagory -->
+                {% if account.account_subcatagory == 1 %}
+                <td>Checking</td>
+                {% elif account.account_subcatagory == 2 %}
+                <td>Petty cash</td>
+                {% elif account.account_subcatagory == 3 %}
+                <td>Inventory</td>
+                {% elif account.account_subcatagory == 4 %}
+                <td>Accounts receivable</td>
+                {% elif account.account_subcatagory == 5 %}
+                <td>Payroll tax liabilities</td>
+                {% elif account.account_subcatagory == 6 %}
+                <td>Sales tax collected</td>
+                {% elif account.account_subcatagory == 7 %}
+                <td>Credit memo liability</td>
+                {% elif account.account_subcatagory == 8 %}
+                <td>Accounts payable</td>
+                {% elif account.account_subcatagory == 9 %}
+                <td>Owner’s equity</td>
+                {% elif account.account_subcatagory == 10 %}
+                <td>Common stock</td>
+                {% elif account.account_subcatagory == 11 %}
+                <td>Retained earnings</td>
+                {% elif account.account_subcatagory == 12 %}
+                <td>Product sales</td>
+                {% elif account.account_subcatagory == 13 %}
+                <td>Earned interest</td>
+                {% elif account.account_subcatagory == 14 %}
+                <td>Miscellaneous income</td>
+                {% elif account.account_subcatagory == 15 %}
+                <td>Payroll</td>
+                {% elif account.account_subcatagory == 16 %}
+                <td>Insurance</td>
+                {% elif account.account_subcatagory == 17 %}
+                <td>Rent</td>
+                {% elif account.account_subcatagory == 18 %}
+                <td>Equipment</td>
+                {% else %}
+                <td>Cost of goods sold(COGS)</td>
+                {% endif %}
+
+
+                <td>{{ account.account_side }}</td>
+                <td style="text-align:right;">${{ account.account_inital_balance|intcomma }}</td>
+                <td style="text-align:right;">${{ account.account_balance|intcomma }}</td>
+
+                <!-- Display Statment -->
+                <!-- {% if account.account_statement == 1 %}
+                <td>Income Statement</td>
+                {% elif account.account_catagory == 2 %}
+                <td>Balance Statement</td>
+                {% else %}
+                <td>Retained Earnings</td>
+                {% endif %} -->
+
+
+                {% if user.is_staff %}
+                <td>
+                    <a title="Edit this account" href="{% url 'edit' account.id %} " class="crud-click" type="submit" name="edit">Edit</a>
+
+                    <a href="{% url 'deactive' account.id %}" class="crud-click" type="submit"
+                        name="deactive">Deactive</a>
+                </td>
+                {% endif %}
+
+            </tr>
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+
+
+
+
+    {% include 'accounting/addaccounts.html' %}
+
+
+
+</div>
+
+
+
+
+{% endblock content %}

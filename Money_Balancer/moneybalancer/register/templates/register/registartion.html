@@ -1,0 +1,109 @@
+{% extends "accounting/base.html"%}
+{% load widget_tweaks %}
+{% load static %}
+<!-- register style
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+
+<script src="{% static 'js/register.js'%}"></script> -->
+
+{% block title %}
+Registrations|Login
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <section id="formHolder">
+
+        <div class="row">
+
+            <!-- Brand Box -->
+            <div class="col-sm-6 brand">
+                <a href="#" class="logo">MB <span>.</span></a>
+
+                <div class="heading">
+                    <h2>Money<sub style="
+            vertical-align: sub; 
+            font-size: large;">Balancer</sub></h2>
+                    <br>
+                    <p>Your Right Choice</p>
+                </div>
+
+                <div class="success-msg">
+                    <p>Great! You are one of our members now</p>
+                    <a href="#" class="profile">Your Profile</a>
+                </div>
+            </div>
+
+
+            <!-- Form Box -->
+            <div class="col-sm-6 form">
+
+
+
+                <!-- Signup Form -->
+                <div class="signup form-peice">
+                    <form class="signup-form" action="{% url 'signup' %}" method="post">
+                        {% csrf_token %}
+
+
+                        {% for hidden in signup.hidden_fields %}
+                        {{ hidden }}
+                        {% endfor %}
+
+                        {% for field in signup.visible_fields %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% render_field field class="form-control" %}
+                            {% for error in field.errors %}
+                            <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+
+
+                        <div class="CTA">
+                            <input type="submit" value="Signup Now" id="submit" name="signup-form">
+                            <a href="{% url 'login' %}" class="switch">I have an account</a>
+                        </div>
+                    </form>
+                </div><!-- End Signup Form -->
+
+
+                <!-- Login Form -->
+                <div class="login form-peice switched">
+                    <form class="login-form" action="{% url 'login' %}" method="post">
+                        {% csrf_token %}
+
+
+                        {% for hidden in login.hidden_fields %}
+                        {{ hidden }}
+                        {% endfor %}
+
+                        {% for field in login.visible_fields %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {% render_field field class="form-control" %}
+                            {% for error in field.errors %}
+                            <span class="help-block">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+
+
+                        <div class="CTA">
+                            <input type="submit" value="Login" name="login-form">
+                            <a href="{% url 'signup' %}" class="switch">I'm New</a>
+                        </div>
+                    </form>
+                </div><!-- End Login Form -->
+
+
+            </div>
+        </div>
+
+    </section>
+
+
+
+    {% endblock content %}
